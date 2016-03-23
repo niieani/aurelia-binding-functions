@@ -19,9 +19,32 @@ export function configure(frameworkConfig: FrameworkConfiguration) {
 }
 
 export interface BindingFunction {
-  connect?(callScope: CallScope, binding: Binding, scope: Scope): void
-  assign?(callScope: CallScope, scope: Scope, value: any, lookupFunctions: any): void
+  /**
+   * invoked by Aurelia to either: 
+   *  - retrieve the current value of the binding
+   *  - trigger a call (e.g. by click.delegate)
+   */
   evaluate(callScope: CallScope, scope: Scope, lookupFunctions, mustEvaluate: boolean): any
+  
+  /**
+   * invoked if the binding is used as a source of values
+   * (as opposed to being used to trigger changes, like in click.delegate)
+   * this is invoked by Aurelia after bind()
+   */
+  connect?(callScope: CallScope, binding: Binding, scope: Scope): void
+  
+  /**
+   * when the binding is two-way, invoked every time new values are fed into the binding by Aurelia
+   */
+  assign?(callScope: CallScope, scope: Scope, value: any, lookupFunctions: any): void
+  
+  /**
+   * invoked when the binding is bound
+   */
   bind?(callScope: CallScope, binding: Binding, scope: Scope, lookupFunctions: any): void
+  
+  /**
+   * invoked when the binding is unbound
+   */
   unbind?(callScope: CallScope, binding: Binding, scope: Scope): void
 }

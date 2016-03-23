@@ -1,6 +1,6 @@
 {
   "name": "aurelia-binding-functions",
-  "version": "0.1.0",
+  "version": "0.1.1",
   "description": "An Aurelia plugin that makes it possible create BindingFunctions.",
   "keywords": [
     "aurelia",
@@ -25,6 +25,7 @@
     "prepublish": "gulp build && npm run wrapdts"
   },
   "devDependencies": {
+    "aurelia-framework": "^1.0.0-beta.1.2.0",
     "browser-sync": "^2.11.0",
     "conventional-changelog": "0.5.3",
     "del": "^2.2.0",
