@@ -5,9 +5,11 @@ import {ValueConverterResource} from 'aurelia-binding';
 import {BindingBehaviorResource} from 'aurelia-binding';
 import {BindingFunctionResource} from './binding-function-resource'
 
-// 3. patch ModuleAnalyzer to understand BindingFunctions
+/**
+ * patch ModuleAnalyzer to understand BindingFunctions
+ * ModuleAnalyzer from https://github.com/aurelia/templating/blob/master/src/module-analyzer.js
+ */
 export function patchModuleAnalyzer() {
-  const analyzeOriginal = ModuleAnalyzer.prototype.analyze
   /**
   * Analyzes a module.
   * @param moduleId The id of the module to analyze.
@@ -16,8 +18,6 @@ export function patchModuleAnalyzer() {
   * @return The ResouceModule representing the analysis.
   */
   ModuleAnalyzer.prototype.analyze = function analyze(moduleId: string, moduleInstance: any, mainResourceKey?: string): ResourceModule {
-    // const originalReturnValue = analyzeOriginal.apply(this, arguments)
-    
     let mainResource;
     let fallbackValue;
     let fallbackKey;
@@ -110,5 +110,4 @@ export function patchModuleAnalyzer() {
 
     return resourceModule;
   }
-  
 }

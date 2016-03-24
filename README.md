@@ -35,10 +35,15 @@ The simplest implementation for a one-way binding might look as follows:
 
 export class AsyncBindingFunction implements BindingFunction {
   connect(callScope: CallScope, binding: Binding, scope: Scope) {
+    // get the value of the first argument passed to our CallScope, 
+    // e.g. the property from async(property)
     const promise = callScope.args[0].evaluate(scope, binding.lookupFunctions, true) as Promise<any> & {promiseResult:any}
     
+    // make sure the binding is updated 
+    // once the property "promiseResult" changes on the "promise"
     binding.observeProperty(promise, 'promiseResult')
     
+    // set the "promiseResult" property once the Promise resolves
     if (promise.promiseResult === undefined && typeof promise.then === 'function') {
       promise.then(value => {
         promise.promiseResult = value
@@ -48,6 +53,8 @@ export class AsyncBindingFunction implements BindingFunction {
   
   evaluate(callScope: CallScope, scope: Scope, lookupFunctions, mustEvaluate: boolean) {
     const promise = callScope.args[0].evaluate(scope, lookupFunctions, true) as Promise<any> & {promiseResult:any}
+    // return the value of "promiseResult" property 
+    // or undefined if the value of the argument is not set 
     return promise ? promise.promiseResult : undefined
   }
 }
@@ -72,7 +79,7 @@ export interface BindingFunction {
   
   // invoked if the binding is used as a source of values 
   // (as opposed to being used to trigger changes, like in click.delegate)
-  // this is invoked by Aurelia after bind()
+  // this is invoked by Aurelia after bind() and every time the binding is recomputed
   connect?(callScope: CallScope, binding: Binding, scope: Scope): void
   
   // when the binding is two-way, invoked every time new values are fed into the binding by Aurelia  
