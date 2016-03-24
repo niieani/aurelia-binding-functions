@@ -93,8 +93,8 @@ export interface BindingFunction {
 }
 ```
 
-For a one-way binding you only need to implement the `evaluate()` method, the rest is optional.
-A two-way binding requires you to also implement `assign()`.
+For a **one-time binding** you only need to implement the `evaluate()` method.
+A **one-way binding** will require you to also implement `connect()`, while a **two-way binding** requires you to also implement `assign()`.
 
 ## Dependencies
 
