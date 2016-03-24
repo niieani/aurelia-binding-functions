@@ -1,6 +1,6 @@
 # aurelia-binding-functions
 
-An Aurelia plugin that allows you to create bi-directional BindingFunctions in a similar way to (ValueConverters)[http://aurelia.io/docs.html#/aurelia/binding/latest/doc/article/binding-value-converters] or BindingBehaviors.
+An Aurelia plugin that allows you to create bi-directional BindingFunctions in a similar way to [ValueConverters](http://aurelia.io/docs.html#/aurelia/binding/latest/doc/article/binding-value-converters) or BindingBehaviors.
 
 ## How to install this plugin?
 
