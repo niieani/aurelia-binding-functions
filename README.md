@@ -60,12 +60,12 @@ export class AsyncBindingFunction implements BindingFunction {
 }
 ```
 
-Now the BindingFunction can be used inside bindings:
+Now the BindingFunction can be used inside bindings prefixed by `@`, i.e. `@async()`:
 
 ```html
 <require from="./async-binding-function"></require>
 
-<h2>${async(somePromise)}</h2>
+<h2>${ @async(somePromise) }</h2>
 ```
 
 A BindingFunction can implement the following methods:

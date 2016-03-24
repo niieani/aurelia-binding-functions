@@ -8,7 +8,7 @@ export class BindingFunctionResource {
 
   static convention(name) {
     if (name.endsWith('BindingFunction')) {
-      return new BindingFunctionResource(camelCase(name.substring(0, name.length - 15)));
+      return new BindingFunctionResource('@' + camelCase(name.substring(0, name.length - 15)));
     }
   }
 
