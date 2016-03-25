@@ -1,6 +1,6 @@
 {
   "name": "aurelia-binding-functions",
-  "version": "0.2.1",
+  "version": "0.2.2",
   "description": "An Aurelia plugin that makes it possible create BindingFunctions.",
   "keywords": [
     "aurelia",
