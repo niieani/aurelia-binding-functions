@@ -1,11 +1,20 @@
-import {CallScope, Scope, Binding, Expression, AccessMember, AccessKeyed} from 'aurelia-binding'
+import {Expression, Binding, Scope} from 'aurelia-binding'
 import {BindingFunction} from './index'
 
-export function patchCallScope() {
-  const callScopeConnect: Function = CallScope.prototype.connect
+export class BindingFunctionScope extends Expression {
+  name;
+  args;
+  ancestor;
   
-  CallScope.prototype.connect = function connect(binding: Binding, scope: Scope) {
-    callScopeConnect.apply(this, arguments)
+  constructor(name, args, ancestor) {
+    super();
+
+    this.name = name;
+    this.args = args;
+    this.ancestor = ancestor;
+  }
+  
+  connect(binding: Binding, scope: Scope) {
     const lookupFunctions = binding.lookupFunctions || scope.resources.lookupFunctions
             
     const bindingFunction = lookupFunctions.bindingFunctions(this.name) as BindingFunction
@@ -14,18 +23,16 @@ export function patchCallScope() {
     }
   }
   
-  CallScope.prototype.assign = function assign(scope: Scope, value: any, lookupFunctions: any): any {
+  assign(scope: Scope, value: any, lookupFunctions: any): any {
     lookupFunctions = lookupFunctions || scope.resources.lookupFunctions
     const bindingFunction = lookupFunctions.bindingFunctions(this.name) as BindingFunction
     if (bindingFunction && typeof bindingFunction.assign === 'function') {
       return bindingFunction.assign(this, scope, value, lookupFunctions)
     }
-    return Expression.prototype.assign.apply(this, arguments)
+    throw new Error(`The BindingFunction '${this.name}' is not assignable`)
   }
   
-  const callScopeEvaluate: Function = CallScope.prototype.evaluate
-  
-  CallScope.prototype.evaluate = function evaluate(scope: Scope, lookupFunctions?, mustEvaluate?: boolean) {    
+  evaluate(scope: Scope, lookupFunctions?, mustEvaluate?: boolean) {    
     lookupFunctions = lookupFunctions || scope.resources.lookupFunctions    
     const bindingFunction = lookupFunctions.bindingFunctions(this.name) as BindingFunction
     if (bindingFunction) {
@@ -34,10 +41,10 @@ export function patchCallScope() {
       else
         throw new Error('The BindingFunction needs to implement evaluate()')
     }
-    return callScopeEvaluate.apply(this, arguments)
+    throw new Error(`No BindingFunction under the name '${this.name}' is registered`)    
   }
   
-  CallScope.prototype.bind = function bind(binding: Binding, scope: Scope, lookupFunctions) {
+  bind(binding: Binding, scope: Scope, lookupFunctions) {
     lookupFunctions = lookupFunctions || binding.lookupFunctions || scope.resources.lookupFunctions    
     const bindingFunction = lookupFunctions.bindingFunctions(this.name) as BindingFunction
     if (bindingFunction && typeof bindingFunction.bind === 'function') {
@@ -45,7 +52,7 @@ export function patchCallScope() {
     }
   }
   
-  CallScope.prototype.unbind = function unbind(binding: Binding, scope: Scope) {
+  unbind(binding: Binding, scope: Scope) {
     const lookupFunctions = binding.lookupFunctions || scope.resources.lookupFunctions    
     const bindingFunction = lookupFunctions.bindingFunctions(this.name) as BindingFunction
     if (bindingFunction && typeof bindingFunction.unbind === 'function') {

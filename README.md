@@ -72,29 +72,55 @@ A BindingFunction can implement the following methods:
 
 ```ts
 export interface BindingFunction {
-  // invoked by Aurelia to either: 
-  //  - retrieve the current value of the binding
-  //  - trigger a call (e.g. by click.delegate)
-  evaluate(callScope: CallScope, scope: Scope, lookupFunctions, mustEvaluate: boolean): any
+  /**
+   * invoked by Aurelia to either: 
+   *  - retrieve the current value of the binding
+   *  - trigger a call (e.g. by click.delegate)
+   */
+  evaluate(bindingFunctionScope: BindingFunctionScope, scope: Scope, lookupFunctions, mustEvaluate: boolean): any
   
-  // invoked if the binding is used as a source of values 
-  // (as opposed to being used to trigger changes, like in click.delegate)
-  // this is invoked by Aurelia after bind() and every time the binding is recomputed
-  connect?(callScope: CallScope, binding: Binding, scope: Scope): void
+  /**
+   * invoked if the binding is used as a source of values
+   * (as opposed to being used to trigger changes, like in click.delegate)
+   * this is invoked by Aurelia after bind() and every time the binding is recomputed
+   */
+  connect?(bindingFunctionScope: BindingFunctionScope, binding: Binding, scope: Scope): void
   
-  // when the binding is two-way, invoked every time new values are fed into the binding by Aurelia  
-  assign?(callScope: CallScope, scope: Scope, value: any, lookupFunctions: any): void
+  /**
+   * when the binding is two-way, invoked every time new values are fed into the binding by Aurelia
+   */
+  assign?(bindingFunctionScope: BindingFunctionScope, scope: Scope, value: any, lookupFunctions: any): void
   
-  // invoked when the binding is bound
-  bind?(callScope: CallScope, binding: Binding, scope: Scope, lookupFunctions: any): void
+  /**
+   * invoked when the binding is bound
+   */
+  bind?(bindingFunctionScope: BindingFunctionScope, binding: Binding, scope: Scope, lookupFunctions: any): void
   
-  // invoked when the binding is unbound
-  unbind?(callScope: CallScope, binding: Binding, scope: Scope): void
+  /**
+   * invoked when the binding is unbound
+   */
+  unbind?(bindingFunctionScope: BindingFunctionScope, binding: Binding, scope: Scope): void
 }
 ```
 
 For a **one-time binding** you only need to implement the `evaluate()` method.
 A **one-way binding** will require you to also implement `connect()`, while a **two-way binding** requires you to also implement `assign()`.
+
+## ScopeFunctions
+
+If you want to create lower-level, global, arbitraitly named Expressions, you may also use ScopeFunctions:
+
+```ts
+import {ParserImplementation} from 'aurelia-binding';
+
+export function configure(aurelia) {
+  let parser = aurelia.container.get(ParserImplementation);
+  parser.registerScopeFunction('@custom', CustomExpression);
+}
+```
+
+Where `CustomExpression` is a class that implements `Expression`.
+For references see [ast.js](https://github.com/aurelia/binding/blob/master/src/ast.js).
 
 ## Dependencies
 
