@@ -2,7 +2,6 @@ import {FrameworkConfiguration} from 'aurelia-framework'
 import {CallScope, Scope, Binding, Expression} from 'aurelia-binding'
 import {BindingFunctionScope} from './binding-function-scope'
 import {patchModuleAnalyzer} from './module-analyzer'
-// import {patchCallScope} from './call-scope'
 import {patchViewResources} from './view-resources'
 import {patchLexer} from './lexer'
 import {patchAccessExpressions} from './access-expression'
@@ -24,9 +23,6 @@ export function configure(frameworkConfig: FrameworkConfiguration) {
   
   // monkey patch ParserImplementation to support ScopeFunctions with fallback to BindingFunctionScope
   patchParserImplementation()
-  
-  // monkey patch CallScope
-  // patchCallScope()
   
   // monkey patch Lexer to allow '@' as a start for an identificator
   patchLexer()
